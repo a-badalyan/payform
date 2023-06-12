@@ -1,0 +1,29 @@
+version: '3.7'
+
+services:
+  main:
+    image: node:16
+    environment:
+      ENVIRONMENT: stage
+      PORT: 3000
+      POSTGRES_URI: postgres://postgres:postgres@postgres/postgres
+      URL_ON_SUCCESS: http://good-url
+      URL_ON_FAILURE: http://good-url
+      MERCHANT_BASE_URL: https://3dsec.sberbank.ru
+      NODE_TLS_REJECT_UNAUTHORIZED: 0
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/code
+    working_dir: /code
+    ports: [ '3000:3000', '3001:3001', '9229:9229' ]
+    command: [ 'node', '--inspect=0.0.0.0:9229', './' ]
+    depends_on: [ postgres ]
+  
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports: [ '5432:5432' ]

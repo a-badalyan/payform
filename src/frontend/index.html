@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Заказ товара</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <h1>Заказ товара</h1>
+    <form id="order-form">
+      <label for="fio">ФИО:</label>
+      <input type="text" id="fio" name="fio"><br><br>
+      <label for="product">Товар:</label>
+      <select id="product" name="product">
+        <option value="1" data-price="34.10">Хлеб</option>
+        <option value="2" data-price="50.00">Сахар</option>
+        <option value="3" data-price="49.50">Молоко</option>
+        <option value="4" data-price="140.40">Творог</option>
+      </select><br><br>
+      <label for="quantity">Количество:</label>
+      <input type="number" id="quantity" name="quantity" value="1" min="1"><br><br>
+      <label for="amount">Сумма:</label>
+      <input type="number" id="amount" name="amount" readonly><br><br>
+      <button type="submit">Отправить заказ</button>
+    </form>
+
+    <script>
+      const form = document.getElementById("order-form");
+      const productSelect = document.getElementById("product");
+      const quantityInput = document.getElementById("quantity");
+      const amountInput = document.getElementById("amount");
+
+      function updateAmount() {
+        const price =
+          productSelect.options[productSelect.selectedIndex].dataset.price;
+        const quantity = quantityInput.value;
+        amountInput.value = price * quantity;
+      }
+
+      form.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const fio = form.elements.fio.value;
+        const product_id = form.elements.product.value;
+        const quantity = form.elements.quantity.value;
+        const amount = form.elements.amount.value;
+        const data = { fio, product_id, quantity, amount };
+        fetch("http://localhost:3000/order", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(response.status);
+            }
+            return response.json();
+          })
+          .catch((error) => showErrorPopup(error));
+      });
+
+      productSelect.addEventListener("change", updateAmount);
+      quantityInput.addEventListener("input", updateAmount);
+
+      function showErrorPopup(errorMessage) {
+
+        const popup = document.createElement("div");
+
+        popup.classList.add("popup");
+        popup.innerHTML = `<div class="popup__content">
+          <p class="popup__message">${errorMessage}</p>
+          <button class="popup__close-button">Закрыть</button>
+        </div>`;
+        document.body.appendChild(popup);
+
+        const closeButton = popup.querySelector(".popup__close-button");
+        closeButton.addEventListener("click", () => {
+          popup.remove();
+        });
+      }
+
+    </script>
+
+  </body>
+</html>
