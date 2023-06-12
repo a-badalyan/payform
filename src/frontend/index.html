@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <h1>Заказ товара</h1>
+    <h1 style="text-align: center;">Заказ товара</h1>
     <form id="order-form">
       <label for="fio">ФИО:</label>
       <input type="text" id="fio" name="fio"><br><br>
@@ -17,8 +17,8 @@
         <option value="3" data-price="49.50">Молоко</option>
         <option value="4" data-price="140.40">Творог</option>
       </select><br><br>
-      <label for="quantity">Количество:</label>
-      <input type="number" id="quantity" name="quantity" value="1" min="1"><br><br>
+      <label for="quantity">Количество, кг:</label>
+      <input type="number" id="quantity" name="quantity" value="0" step="1" min="0"><br><br>
       <label for="amount">Сумма:</label>
       <input type="number" id="amount" name="amount" readonly><br><br>
       <button type="submit">Отправить заказ</button>
@@ -34,16 +34,19 @@
         const price =
           productSelect.options[productSelect.selectedIndex].dataset.price;
         const quantity = quantityInput.value;
+
         amountInput.value = price * quantity;
       }
 
       form.addEventListener("submit", (event) => {
         event.preventDefault();
+
         const fio = form.elements.fio.value;
         const product_id = form.elements.product.value;
         const quantity = form.elements.quantity.value;
         const amount = form.elements.amount.value;
         const data = { fio, product_id, quantity, amount };
+        
         fetch("http://localhost:3000/order", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
