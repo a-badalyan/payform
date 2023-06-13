@@ -57,6 +57,7 @@ button[type="submit"]:hover {
   width: 200px;
   height: 200px;
   border-radius: 10px;
+  background-color: #ccc;
 }
 
 .popup__message {
