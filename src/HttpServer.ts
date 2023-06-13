@@ -6,6 +6,7 @@ import Db from "./Db";
 import SberClient from "./SberClient";
 import IHttpServer from "./types/IHttpServer";
 import { createOrderController } from "./backend/createOrderController";
+import { callbackOrderController } from "./backend/callbackOrderController";
 
 export default class HttpServer implements IHttpServer {
   port: number;
@@ -57,7 +58,10 @@ export default class HttpServer implements IHttpServer {
     this.expressApp.get("/", (_req, res) =>
       res.sendFile(`${__dirname}/frontend/index.html`)
     );
+
     this.expressApp.post("/order", createOrderController.bind(this));
+
+    this.expressApp.get("/callback", callbackOrderController.bind(this));
   }
 
   stop(): void {

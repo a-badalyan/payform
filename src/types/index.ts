@@ -1,4 +1,4 @@
-type OrderStatus = "new" | "pending" | "completed" | "error";
+export type OrderStatus = "new" | "pending" | "completed" | "error";
 
 export type Product = {
   id: string;
@@ -45,4 +45,32 @@ export type SberCreateOrderResponse = {
 
   // only for app2app and back2app
   externalParams?: { [key: string]: any } | null;
+};
+
+export type SberOperation =
+  | "approved"
+  | "declinedByTimeout"
+  | "deposited"
+  | "reversed"
+  | "refunded";
+
+export type DbOrder = {
+  id: string;
+  product_id: string;
+  quantity: string;
+  price: string;
+  amount: string;
+  status: string;
+  error_details?: string | null;
+  sber_order_id?: string | null;
+  operation_status?: SberOperation | null;
+  created_at: string;
+  updated_at: string;
+};
+
+export type SberCallbackQuery = {
+  mdOrder: string;
+  orderNumber: string;
+  operation: SberOperation;
+  status: "0" | "1";
 };
